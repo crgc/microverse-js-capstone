@@ -1,17 +1,13 @@
-import pokedex from './pokedex';
+import pokedex from './pokedex.js';
 
-const fetchSinglePokemon = async (pokemon) => {
-  return await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`).then(response => response.json());
-};
+const fetchSinglePokemon = async (pokemon) => fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`).then((response) => response.json());
 
-const fetchPokemon = async() => {
-  const fetchAll = pokedex.map(async pokemon => {
-    return await fetchSinglePokemon(pokemon);
-  });
+const fetchPokemon = async () => {
+  const fetchAll = pokedex.map(async (pokemon) => fetchSinglePokemon(pokemon));
 
-  const result = (await Promise.all(fetchAll)).map(pkmn => ({
+  const result = (await Promise.all(fetchAll)).map((pkmn) => ({
     name: pkmn.name,
-    image: pkmn.sprites['other']['official-artwork']['front_default']
+    image: pkmn.sprites.other['official-artwork'].front_default,
   }));
 
   return result;
