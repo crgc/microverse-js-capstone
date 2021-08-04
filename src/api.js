@@ -7,7 +7,7 @@ const fetchPokemon = async () => {
 
   const result = (await Promise.all(fetchAll)).map((pkmn) => ({
     name: pkmn.name,
-    image: pkmn.sprites.other['official-artwork'].front_default,
+    image_url: pkmn.sprites.other['official-artwork'].front_default,
   }));
 
   return result;

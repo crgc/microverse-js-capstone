@@ -14,6 +14,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: './src/favicon.ico' },
+      ],
+    }),
   ],
   output: {
     filename: '[name].bundle.js',
@@ -30,7 +35,6 @@ module.exports = {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
       },
-
     ],
   },
 };

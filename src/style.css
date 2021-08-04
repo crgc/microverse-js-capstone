@@ -6,9 +6,7 @@ main {
 
 .image-cont > img {
   height: 10rem;
-  border: 1px solid red;
   width: 170px;
-  cursor: pointer;
 }
 
 .big-image-style {
