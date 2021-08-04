@@ -30,5 +30,5 @@ export {
   createElementWithClass,
   createDivWithClass,
   createDivWithId,
-  createCommentButton
-}
+  createCommentButton,
+};

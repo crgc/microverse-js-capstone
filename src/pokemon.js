@@ -4,5 +4,5 @@ const savePokemon = (pokemon) => localStorage.setItem('pokemon', pokemon);
 
 export {
   loadPokemon,
-  savePokemon
+  savePokemon,
 };

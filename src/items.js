@@ -1,5 +1,7 @@
 import fetchPokemon from './api';
-import { createDivWithClass, createDivWithId, createElement, createElementWithClass, createCommentButton } from './util';
+import {
+  createDivWithClass, createDivWithId, createElement, createElementWithClass, createCommentButton,
+} from './util';
 
 const getItems = () => JSON.parse(localStorage.getItem('items'));
 
@@ -8,19 +10,19 @@ const saveItems = (items) => localStorage.setItem('items', JSON.stringify(items)
 const loadItems = () => {
   let items = getItems();
 
-  if(!items) {
+  if (!items) {
     const pkmnData = fetchPokemon();
-    items= [];
+    items = [];
 
-    pkmnData.forEach(pkmn => {
+    pkmnData.forEach((pkmn) => {
       const pkmnName = pkmn.name;
-      const pkmnName = pkmnName.charAt(0).toUpperCase() + pkmnName.slice(1);
+      pkmnName = pkmnName.charAt(0).toUpperCase() + pkmnName.slice(1);
 
       items = items.concat({
         pokemon: pkmnName,
         image_url: pkmn.image_url,
         comments: [],
-        likes: 0
+        likes: 0,
       });
     });
 
@@ -28,16 +30,15 @@ const loadItems = () => {
   }
 
   return items;
-}
+};
 
 const display = async () => {
   const itemsContainerElement = document.getElementById('items-container');
-  (await loadItems()).forEach(item => {
-
+  (await loadItems()).forEach((item) => {
     const pkmn = item.pokemon;
 
     const columnDiv = createDivWithClass('d-flex flex-column');
-    const idDiv = createDivWithId(pkmn);    
+    const idDiv = createDivWithId(pkmn);
     const imageContDiv = createDivWithClass('image-cont');
 
     const imgElement = createElement('img');
@@ -63,6 +64,6 @@ const display = async () => {
 
     itemsContainerElement.appendChild(columnDiv);
   });
-}
+};
 
 export default display;
