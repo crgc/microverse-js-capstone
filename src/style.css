@@ -3,3 +3,10 @@ body,
 main {
   height: 100%;
 }
+
+.image-cont > img {
+  height: 10rem;
+  border: 1px solid red;
+  width: 170px;
+  cursor: pointer;
+}
