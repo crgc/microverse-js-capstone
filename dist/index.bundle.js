@@ -130,6 +130,16 @@ eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, style) {\
 
 /***/ }),
 
+/***/ "./src/api.js":
+/*!********************!*\
+  !*** ./src/api.js ***!
+  \********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _pokedex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pokedex */ \"./src/pokedex.js\");\n\n\nconst fetchSinglePokemon = async (pokemon) => {\n  return await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`).then(response => response.json());\n};\n\nconst fetchPokemon = async() => {\n  const fetchAll = _pokedex__WEBPACK_IMPORTED_MODULE_0__.default.map(async pokemon => {\n    return await fetchSinglePokemon(pokemon);\n  });\n\n  const result = (await Promise.all(fetchAll)).map(pkmn => ({\n    name: pkmn.name,\n    image: pkmn.sprites['other']['official-artwork']['front_default']\n  }));\n\n  console(result);\n};\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchPokemon);\n\n//# sourceURL=webpack://microverse-js-capstone/./src/api.js?");
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
