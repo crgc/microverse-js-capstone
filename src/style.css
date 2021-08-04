@@ -3,3 +3,16 @@ body,
 main {
   height: 100%;
 }
+
+.image-cont > img {
+  height: 10rem;
+  border: 1px solid red;
+  width: 170px;
+  cursor: pointer;
+}
+
+.big-image-style {
+  height: 12rem;
+  width: 300px;
+  border: 1px solid red;
+}
