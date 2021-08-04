@@ -1,6 +1,7 @@
 import fetchPokemon from './api.js';
 import {
-  getElementById, createDivWithClass, createDivWithId, createElement, createElementWithClass, createCommentButton,
+  getElementById, createDivWithClass, createDivWithId,
+  createElement, createElementWithClass, createCommentButton,
 } from './util.js';
 
 const getItems = () => JSON.parse(localStorage.getItem('items'));
