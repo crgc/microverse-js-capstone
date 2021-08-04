@@ -1,7 +1,7 @@
-import fetchPokemon from './api';
+import fetchPokemon from './api.js';
 import {
   createDivWithClass, createDivWithId, createElement, createElementWithClass, createCommentButton,
-} from './util';
+} from './util.js';
 
 const getItems = () => JSON.parse(localStorage.getItem('items'));
 
@@ -15,7 +15,7 @@ const loadItems = () => {
     items = [];
 
     pkmnData.forEach((pkmn) => {
-      const pkmnName = pkmn.name;
+      let pkmnName = pkmn.name;
       pkmnName = pkmnName.charAt(0).toUpperCase() + pkmnName.slice(1);
 
       items = items.concat({
