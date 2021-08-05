@@ -4,12 +4,14 @@ import {
   createElement, createElementWithClass, createCommentButton,
 } from './util.js';
 
+let items = [];
+
 const getItems = () => JSON.parse(localStorage.getItem('items'));
 
 const saveItems = (items) => localStorage.setItem('items', JSON.stringify(items));
 
 const loadItems = async () => {
-  let items = getItems();
+  items = getItems();
 
   if (!items) {
     const pkmnData = await fetchPokemon();
@@ -24,6 +26,7 @@ const loadItems = async () => {
         image_url: pkmn.image_url,
         comments: [],
         likes: 0,
+        liked: false
       });
     });
 
@@ -31,6 +34,34 @@ const loadItems = async () => {
   }
 
   return items;
+};
+
+const getLikeClassName = (item) => item.liked ? 'fas fa-heart red' : 'far fa-heart';
+
+const createHeartElement = (item) => {
+  const heartElement = createElementWithClass('i', getLikeClassName(item));
+  heartElement.addEventListener('click', event => {
+    for (const i in items) { /* eslint-disable-line no-restricted-syntax */
+      if (items[i].pokemon === item.pokemon) { 
+        if(items[i].liked) {
+          items[i].likes -= 1;
+        } else {
+          items[i].likes += 1;
+        }
+
+        items[i].liked = !items[i].liked;
+
+        const likesElement = getElementById(`likes-${item.pokemon}`);
+        likesElement.textContent = `${items[i].likes} likes`;
+
+        heartElement.className = getLikeClassName(items[i]);
+      }
+
+      saveItems(items);
+    }
+  });
+
+  return heartElement;
 };
 
 const display = async () => {
@@ -52,9 +83,16 @@ const display = async () => {
     imgElement.setAttribute('alt', pkmn);
 
     const h5Element = createElementWithClass('h5', 'mt-3');
-    h5Element.innerHTML = `${pkmn} <span><i class="far fa-heart"></i></span>`;
+    h5Element.textContent = `${pkmn} `;
+
+    const spanElement = createElement('span');
+    const heartElement = createHeartElement(item);
+
+    spanElement.appendChild(heartElement);
+    h5Element.appendChild(spanElement);
 
     const pElement = createElement('p');
+    pElement.id = `likes-${pkmn}`;
     pElement.textContent = `${item.likes} likes`;
 
     const commentButton = createCommentButton();
