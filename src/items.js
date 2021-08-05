@@ -55,9 +55,11 @@ const createHeartElement = (item) => {
         likesElement.textContent = `${items[i].likes} likes`;
 
         heartElement.className = getLikeClassName(items[i]);
-      }
 
-      saveItems(items);
+        saveItems(items);
+
+        break;
+      }
     }
   });
 
