@@ -1,17 +1,18 @@
 import fetchPokemon from './api.js';
 import {
-  createDivWithClass, createDivWithId, createElement, createElementWithClass, createCommentButton,
+  getElementById, createDivWithClass, createDivWithId,
+  createElement, createElementWithClass, createCommentButton,
 } from './util.js';
 
 const getItems = () => JSON.parse(localStorage.getItem('items'));
 
 const saveItems = (items) => localStorage.setItem('items', JSON.stringify(items));
 
-const loadItems = () => {
+const loadItems = async () => {
   let items = getItems();
 
   if (!items) {
-    const pkmnData = fetchPokemon();
+    const pkmnData = await fetchPokemon();
     items = [];
 
     pkmnData.forEach((pkmn) => {
@@ -33,8 +34,13 @@ const loadItems = () => {
 };
 
 const display = async () => {
-  const itemsContainerElement = document.getElementById('items-container');
-  (await loadItems()).forEach((item) => {
+  const items = await loadItems();
+  const itemsContainerElement = getElementById('items-container');
+
+  const itemsCounterElement = getElementById('items-counter');
+  itemsCounterElement.textContent = `Pokémon (${items.length})`;
+
+  items.forEach((item) => {
     const pkmn = item.pokemon;
 
     const columnDiv = createDivWithClass('d-flex flex-column');

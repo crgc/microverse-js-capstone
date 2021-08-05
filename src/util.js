@@ -1,3 +1,4 @@
+const getElementById = (id) => document.getElementById(id);
 const createElement = (name) => document.createElement(name);
 const createDiv = () => createElement('div');
 
@@ -26,6 +27,7 @@ const createCommentButton = () => {
 };
 
 export {
+  getElementById,
   createElement,
   createElementWithClass,
   createDivWithClass,
