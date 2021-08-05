@@ -26,7 +26,7 @@ const loadItems = async () => {
         image_url: pkmn.image_url,
         comments: [],
         likes: 0,
-        liked: false
+        liked: false,
       });
     });
 
@@ -36,14 +36,14 @@ const loadItems = async () => {
   return items;
 };
 
-const getLikeClassName = (item) => item.liked ? 'fas fa-heart red' : 'far fa-heart';
+const getLikeClassName = (item) => (item.liked ? 'fas fa-heart red' : 'far fa-heart');
 
 const createHeartElement = (item) => {
   const heartElement = createElementWithClass('i', getLikeClassName(item));
-  heartElement.addEventListener('click', event => {
-    for (const i in items) { /* eslint-disable-line no-restricted-syntax */
-      if (items[i].pokemon === item.pokemon) { 
-        if(items[i].liked) {
+  heartElement.addEventListener('click', () => {
+    for (const i in items) { /* eslint-disable-line */
+      if (items[i].pokemon === item.pokemon) {
+        if (items[i].liked) {
           items[i].likes -= 1;
         } else {
           items[i].likes += 1;
