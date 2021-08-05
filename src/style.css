@@ -4,6 +4,10 @@ main {
   height: 100%;
 }
 
+.red {
+  color: red;
+}
+
 .image-cont > img {
   height: 10rem;
   width: 170px;
