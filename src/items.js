@@ -150,7 +150,6 @@ const display = async () => {
     commentModal.querySelector('#comment-form').dataset.itemId = item.id;
 
     commentModal.querySelector('#add-comment').addEventListener('click', addComment);
-    
 
     document.body.appendChild(commentModal);
     const commentButton = createCommentButton();
