@@ -95,11 +95,53 @@ const display = async () => {
     const pElement = createElement('p');
     pElement.id = `likes-${pkmn}`;
     pElement.textContent = `${item.likes} likes`;
+    const commentModal = document.createElement('div');
+    commentModal.className = 'modal';
+    commentModal.innerHTML = `           
+<div class="modal-content">
+<span class="close">&times;</span>
+<img src="${item.image_url}" class="w-25 container border border-dark mb-3"></img>
+<h3 class="text-center mb-3">${pkmn}</h3>
+<h3 class="text-center mb-3">Comments(${item.comments.length})</h3>
+<form action="" class="form-group w-50 container" id="add-comment">
+<h6 class="text-center mb-3">Add a comment</h6>
+<input type="text" placeholder="Your name" class="form-control mb-3" id="namefield1">
+<textarea placeholder="Your insights" class="form-control mb-3" id="insightfield"></textarea>
+<button type="submit" id="add-comment">Comment</button>
+</form>
+</div>
+`;
 
+    const addComment = () => {
+      const namefield = commentModal.querySelector('#namefield1').value;
+      const commentfield = commentModal.querySelector('#insightfield').value;
+      const commentElement = document.createElement('p');
+      commentElement.innerText = `
+<p class="text-center"><span>${namefield}:</span>  ${commentfield}</p>
+`;
+
+      commentElement.appendChild(commentModal);
+    };
+
+    commentModal.querySelector('#add-comment').addEventListener('submit', () => {
+      addComment();
+    });
+
+    document.body.appendChild(commentModal);
     const commentButton = createCommentButton();
     commentButton.addEventListener('click', () => {
-      
-    })
+      commentModal.style.display = 'block';
+    });
+    const span = commentModal.querySelector('.close');
+    span.addEventListener('click', () => {
+      commentModal.style.display = 'none';
+    });
+
+    window.onclick = function (event) {
+      if (event.target === commentModal) {
+        commentModal.style.display = 'none';
+      }
+    };
 
     imageContDiv.appendChild(imgElement);
 
