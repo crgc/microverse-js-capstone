@@ -19,7 +19,7 @@ describe('Items counter', () => {
       comments: [],
       likes: 5,
       liked: true,
-    }
+    },
   ];
 
   beforeEach(async () => {
@@ -36,7 +36,7 @@ describe('Items counter', () => {
     const item = items[0];
     const commentsArrSize = item.comments.length;
     const commentsCounter = getElementById(`comments-${item.pokemon}`);
-    
+
     const commentsCount = commentsCounter.textContent
       .substring('Comments ('.length)
       .substring(0, 1);
