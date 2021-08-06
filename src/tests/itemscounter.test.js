@@ -3,6 +3,7 @@
  */
 
 import { beforeEach } from '@jest/globals';
+import jsdom from 'jsdom';
 import iconv from 'iconv-lite';
 import encodings from 'iconv-lite/encodings'; /* eslint-disable-line */
 import { display } from '../items.js';
@@ -29,11 +30,10 @@ describe('Items counter', () => {
   ];
 
   beforeEach(async () => {
-    const jsdom = require('jsdom'); /* eslint-disable-line */
     const { JSDOM } = jsdom;
-
     const filename = __dirname.substring(0, __dirname.length - 'tests'.length).concat('index.html');
     const doc = await JSDOM.fromFile(filename, {}).then((dom) => dom.window.document);
+
     setDocument(doc);
   });
 
