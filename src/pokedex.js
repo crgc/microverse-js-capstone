@@ -1,1 +1,0 @@
-export default ['sceptile', 'arcanine', 'blastoise', 'pikachu', 'dragonite', 'umbreon'];
