@@ -102,15 +102,16 @@ const display = async () => {
 <span class="close">&times;</span>
 <img src="${item.image_url}" class="w-25 container border border-dark mb-3"></img>
 <h3 class="text-center mb-3">${pkmn}</h3>
-<h3 class="text-center mb-3">Comments(${item.comments.length})</h3>
+<h3 class="text-center mb-3 commentsection">Comments(${item.comments.length})</h3>
 <form action="" class="form-group w-50 container" id="add-comment">
 <h6 class="text-center mb-3">Add a comment</h6>
 <input type="text" placeholder="Your name" class="form-control mb-3" id="namefield1">
 <textarea placeholder="Your insights" class="form-control mb-3" id="insightfield"></textarea>
-<button type="submit" id="add-comment">Comment</button>
+<button id="add-comment">Comment</button>
 </form>
 </div>
 `;
+columnDiv.appendChild(commentModal);
 
     const addComment = () => {
       const namefield = commentModal.querySelector('#namefield1').value;
@@ -119,12 +120,14 @@ const display = async () => {
       commentElement.innerText = `
 <p class="text-center"><span>${namefield}:</span>  ${commentfield}</p>
 `;
-
-      commentElement.appendChild(commentModal);
+// commentModal.appendChild(commentElement)
     };
 
-    commentModal.querySelector('#add-comment').addEventListener('submit', () => {
+
+    commentModal.querySelector('#add-comment').addEventListener('click', () => {
       addComment();
+      console.log("clicked")
+      console.log(addComment())
     });
 
     document.body.appendChild(commentModal);
