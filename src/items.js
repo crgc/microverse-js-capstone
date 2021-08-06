@@ -79,7 +79,6 @@ const display = async () => {
     const columnDiv = createDivWithClass('d-flex flex-column');
     const idDiv = createDivWithId(pkmn);
     const imageContDiv = createDivWithClass('image-cont');
-
     const imgElement = createElement('img');
     imgElement.setAttribute('src', item.image_url);
     imgElement.setAttribute('alt', pkmn);
@@ -98,6 +97,9 @@ const display = async () => {
     pElement.textContent = `${item.likes} likes`;
 
     const commentButton = createCommentButton();
+    commentButton.addEventListener('click', () => {
+      
+    })
 
     imageContDiv.appendChild(imgElement);
 
