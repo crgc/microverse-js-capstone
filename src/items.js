@@ -1,7 +1,8 @@
+import { v4 as uuidv4 } from 'uuid';
 import fetchPokemon from './api.js';
 import {
   getElementById, createDivWithClass, createDivWithId,
-  createElement, createElementWithClass, createCommentButton,
+  createElement, createElementWithClass, createCommentButton, formatDate,
 } from './util.js';
 
 let items = [];
@@ -22,6 +23,7 @@ const loadItems = async () => {
       pkmnName = pkmnName.charAt(0).toUpperCase() + pkmnName.slice(1);
 
       items = items.concat({
+        id: uuidv4(),
         pokemon: pkmnName,
         image_url: pkmn.image_url,
         comments: [],
@@ -29,7 +31,7 @@ const loadItems = async () => {
         liked: false,
       });
     });
-
+    console.log('items', items);
     saveItems(items);
   }
 
@@ -66,6 +68,31 @@ const createHeartElement = (item) => {
   return heartElement;
 };
 
+const addComment = (event) => {
+  event.preventDefault();
+  const { parentElement } = event.target;
+  const nameInput = parentElement.querySelector('input');
+  const commentInput = parentElement.querySelector('textarea');
+  const name = nameInput.value;
+  const comment = commentInput.value;
+  const id = event.target.parentElement.dataset.itemId;
+  items = getItems();
+  items = items.map((item) => {
+    if (item.id === id) {
+      const newComment = {
+        id: uuidv4(),
+        name,
+        date: new Date(Date.now()),
+        comment,
+      };
+      item.comments = [newComment, ...item.comments];
+    }
+    return item;
+  });
+  nameInput.value = '';
+  commentInput.value = '';
+  saveItems(items);
+};
 const display = async () => {
   const items = await loadItems();
   const itemsContainerElement = getElementById('items-container');
@@ -98,37 +125,32 @@ const display = async () => {
     const commentModal = document.createElement('div');
     commentModal.className = 'modal';
     commentModal.innerHTML = `           
-<div class="modal-content">
-<span class="close">&times;</span>
-<img src="${item.image_url}" class="w-25 container border border-dark mb-3"></img>
-<h3 class="text-center mb-3">${pkmn}</h3>
-<h3 class="text-center mb-3 commentsection">Comments(${item.comments.length})</h3>
-<form action="" class="form-group w-50 container" id="add-comment">
-<h6 class="text-center mb-3">Add a comment</h6>
-<input type="text" placeholder="Your name" class="form-control mb-3" id="namefield1">
-<textarea placeholder="Your insights" class="form-control mb-3" id="insightfield"></textarea>
-<button id="add-comment">Comment</button>
-</form>
-</div>
-`;
-columnDiv.appendChild(commentModal);
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img src="${item.image_url}" class="w-25 container border border-dark mb-3"></img>
+        <h3 class="text-center mb-3">${pkmn}</h3>
+        <h3 class="text-center mb-3 commentsection">Comments(${item.comments.length})</h3>
+        <div class="comments">
+          ${item.comments.map((comment) => `
+            <div class="d-flex flex-column mb-1 py-1 border-bottom container">
+              <h4 class="font-medium-1">${comment.name}<h4/>
+              <h5 class="font-small-2">${formatDate(comment.date)}</h5>
+              <p class="font-small-3">${comment.comment}</p>
+            </div>`)}
+        </div>
+        <forms class="form-group w-50 container" id="comment-form">
+          <h6 class="text-center mb-3">Add a comment</h6>
+          <input type="text" placeholder="Your name" class="form-control mb-3" id="name-field">
+          <textarea placeholder="Your insights" class="form-control mb-3" id="insightfield"></textarea>
+          <button id="add-comment">Comment</button>
+        </form>
+      </div>
+    `;
+    columnDiv.appendChild(commentModal);
+    commentModal.querySelector('#comment-form').dataset.itemId = item.id;
 
-    const addComment = () => {
-      const namefield = commentModal.querySelector('#namefield1').value;
-      const commentfield = commentModal.querySelector('#insightfield').value;
-      const commentElement = document.createElement('p');
-      commentElement.innerText = `
-<p class="text-center"><span>${namefield}:</span>  ${commentfield}</p>
-`;
-// commentModal.appendChild(commentElement)
-    };
-
-
-    commentModal.querySelector('#add-comment').addEventListener('click', () => {
-      addComment();
-      console.log("clicked")
-      console.log(addComment())
-    });
+    commentModal.querySelector('#add-comment').addEventListener('click', addComment);
+    
 
     document.body.appendChild(commentModal);
     const commentButton = createCommentButton();
