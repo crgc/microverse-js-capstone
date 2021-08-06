@@ -1,5 +1,10 @@
-const getElementById = (id) => document.getElementById(id);
-const createElement = (name) => document.createElement(name);
+let _document_ = null;
+
+const document = () => _document_ || document;
+const setDocument = (doc) => _document_ = doc;
+
+const getElementById = (id) => document().getElementById(id);
+const createElement = (name) => document().createElement(name);
 const createDiv = () => createElement('div');
 
 const createElementWithClass = (name, clazz) => {
@@ -26,17 +31,9 @@ const createCommentButton = () => {
   return commentButton;
 };
 
-export {
-  getElementById,
-  createElement,
-  createElementWithClass,
-  createDivWithClass,
-  createDivWithId,
-  createCommentButton,
-};
-
-export const formatDate = (timestamp) => {
+const formatDate = (timestamp) => {
   if (!timestamp) return '';
+
   const date = new Date(timestamp);
   const formatter = new Intl.DateTimeFormat('en-NG', {
     weekday: 'short',
@@ -45,5 +42,17 @@ export const formatDate = (timestamp) => {
     day: 'numeric',
     hour12: true,
   }).format(date);
+
   return formatter;
+};
+
+export {
+  getElementById,
+  createElement,
+  createElementWithClass,
+  createDivWithClass,
+  createDivWithId,
+  createCommentButton,
+  formatDate,
+  setDocument
 };
