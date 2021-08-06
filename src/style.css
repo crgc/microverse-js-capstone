@@ -6,7 +6,7 @@ main {
 
 .image-cont > img {
   height: 10rem;
-  width: 170px;
+  width: 220px;
 }
 
 .single-image {
@@ -57,4 +57,16 @@ main {
   color: #000;
   text-decoration: none;
   cursor: pointer;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .image-cont > img {
+    width: 170px;
+  }
 }
