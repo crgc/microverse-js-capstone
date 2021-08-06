@@ -31,7 +31,7 @@ const loadItems = async () => {
         liked: false,
       });
     });
-    console.log('items', items);
+
     saveItems(items);
   }
 
@@ -93,8 +93,9 @@ const addComment = (event) => {
   commentInput.value = '';
   saveItems(items);
 };
-const display = async () => {
-  const items = await loadItems();
+
+const displayItems = async () => {
+  items = items || await loadItems();
   const itemsContainerElement = getElementById('items-container');
 
   const itemsCounterElement = getElementById('items-counter');
@@ -123,14 +124,13 @@ const display = async () => {
     pElement.id = `likes-${pkmn}`;
     pElement.textContent = `${item.likes} likes`;
 
-    const commentModal = document.createElement('div');
-    commentModal.className = 'modal';
+    const commentModal = createDivWithClass('modal');
     commentModal.innerHTML = `           
       <div class="modal-content">
         <span class="close">&times;</span>
         <img src="${item.image_url}" class="w-25 container border border-dark mb-3"></img>
         <h3 class="text-center mb-3">${pkmn}</h3>
-        <h3 class="text-center mb-3 commentsection">Comments(${item.comments.length})</h3>
+        <h3 class="text-center mb-3 commentsection">Comments (${item.comments.length})</h3>
         <div class="comments">
           ${item.comments.map((comment) => `
             <div class="d-flex flex-column mb-1 py-1 border-bottom container">
@@ -152,17 +152,17 @@ const display = async () => {
 
     commentModal.querySelector('#add-comment').addEventListener('click', addComment);
 
-    document.body.appendChild(commentModal);
     const commentButton = createCommentButton();
     commentButton.addEventListener('click', () => {
       commentModal.style.display = 'block';
     });
+
     const span = commentModal.querySelector('.close');
     span.addEventListener('click', () => {
       commentModal.style.display = 'none';
     });
 
-    window.onclick = function (event) {
+    window.onclick = (event) => {
       if (event.target === commentModal) {
         commentModal.style.display = 'none';
       }
@@ -181,4 +181,15 @@ const display = async () => {
   });
 };
 
-export default display;
+const display = async (_items_) => {
+  if (_items_) {
+    items = _items_;
+  }
+
+  displayItems();
+};
+
+export {
+  getItems,
+  display,
+};
