@@ -3,11 +3,11 @@
  */
 
 import { beforeEach } from '@jest/globals';
+import iconv from 'iconv-lite';
+import encodings from 'iconv-lite/encodings'; /* eslint-disable-line */
 import { display } from '../items.js';
 import { setDocument, getElementById } from '../util.js';
 
-import iconv from 'iconv-lite';
-import encodings from 'iconv-lite/encodings';
 iconv.encodings = encodings;
 
 describe('Items counter', () => {
@@ -25,16 +25,15 @@ describe('Items counter', () => {
       comments: [],
       likes: 1,
       liked: false,
-    }
+    },
   ];
 
   beforeEach(async () => {
-    const jsdom = require("jsdom");
+    const jsdom = require('jsdom'); /* eslint-disable-line */
     const { JSDOM } = jsdom;
 
-    const filename = __dirname.substring(0, __dirname.length - 'tests'.length)
-                              .concat('index.html');
-    const doc = await JSDOM.fromFile(filename, {}).then(dom => { return dom.window.document; });
+    const filename = __dirname.substring(0, __dirname.length - 'tests'.length).concat('index.html');
+    const doc = await JSDOM.fromFile(filename, {}).then((dom) => dom.window.document);
     setDocument(doc);
   });
 
@@ -44,9 +43,9 @@ describe('Items counter', () => {
     const itemsArrSize = items.length;
     const itemsCounter = getElementById('items-counter');
     const itemsCount = itemsCounter.textContent
-                                   .substring('Pokémon ('.length)
-                                   .substring(0, 1);
+      .substring('Pokémon ('.length)
+      .substring(0, 1);
 
-    expect(parseInt(itemsCount)).toBe(itemsArrSize);
+    expect(parseInt(itemsCount, 10)).toBe(itemsArrSize);
   });
 });

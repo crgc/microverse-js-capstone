@@ -1,7 +1,7 @@
-let _document_ = null;
+let defaultDocument = null;
 
-const document = () => _document_ || document;
-const setDocument = (doc) => _document_ = doc;
+const document = () => defaultDocument || document;
+const setDocument = (doc) => { defaultDocument = doc; };
 
 const getElementById = (id) => document().getElementById(id);
 const createElement = (name) => document().createElement(name);
@@ -54,5 +54,5 @@ export {
   createDivWithId,
   createCommentButton,
   formatDate,
-  setDocument
+  setDocument,
 };

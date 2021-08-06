@@ -31,7 +31,7 @@ const loadItems = async () => {
         liked: false,
       });
     });
-    console.log('items', items);
+
     saveItems(items);
   }
 
@@ -162,7 +162,7 @@ const displayItems = async () => {
       commentModal.style.display = 'none';
     });
 
-    window.onclick = function (event) {
+    window.onclick = (event) => {
       if (event.target === commentModal) {
         commentModal.style.display = 'none';
       }
@@ -182,7 +182,7 @@ const displayItems = async () => {
 };
 
 const display = async (_items_) => {
-  if(_items_) {
+  if (_items_) {
     items = _items_;
   }
 
@@ -191,5 +191,5 @@ const display = async (_items_) => {
 
 export {
   getItems,
-  display
+  display,
 };
