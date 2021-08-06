@@ -91,7 +91,7 @@ const addComment = (event) => {
   });
   nameInput.value = '';
   commentInput.value = '';
-  
+
   saveItems(items);
 };
 

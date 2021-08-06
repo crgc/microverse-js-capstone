@@ -1,6 +1,6 @@
 let defaultDocument = null;
 
-const getDocument = () => { return defaultDocument ? defaultDocument : document; }
+const getDocument = () => (defaultDocument || document);
 const setDocument = (doc) => { defaultDocument = doc; };
 
 const getElementById = (id) => getDocument().getElementById(id);
