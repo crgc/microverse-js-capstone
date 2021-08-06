@@ -5,7 +5,7 @@ import {
   createElement, createElementWithClass, createCommentButton, formatDate,
 } from './util.js';
 
-let items = [];
+let items = null;
 
 const getItems = () => JSON.parse(localStorage.getItem('items'));
 
@@ -91,6 +91,7 @@ const addComment = (event) => {
   });
   nameInput.value = '';
   commentInput.value = '';
+  
   saveItems(items);
 };
 
@@ -181,7 +182,7 @@ const displayItems = async () => {
   });
 };
 
-const display = async (_items_) => {
+const display = (_items_) => {
   if (_items_) {
     items = _items_;
   }

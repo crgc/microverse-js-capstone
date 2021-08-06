@@ -1,10 +1,10 @@
 let defaultDocument = null;
 
-const document = () => defaultDocument || document;
+const getDocument = () => { return defaultDocument ? defaultDocument : document; }
 const setDocument = (doc) => { defaultDocument = doc; };
 
-const getElementById = (id) => document().getElementById(id);
-const createElement = (name) => document().createElement(name);
+const getElementById = (id) => getDocument().getElementById(id);
+const createElement = (name) => getDocument().createElement(name);
 const createDiv = () => createElement('div');
 
 const createElementWithClass = (name, clazz) => {
