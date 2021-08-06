@@ -131,7 +131,7 @@ const displayItems = async () => {
         <span class="close">&times;</span>
         <img src="${item.image_url}" class="w-25 container border border-dark mb-3"></img>
         <h3 class="text-center mb-3">${pkmn}</h3>
-        <h3 class="text-center mb-3 commentsection">Comments (${item.comments.length})</h3>
+        <h3 id="comments-${pkmn}" class="text-center mb-3 commentsection">Comments (${item.comments.length})</h3>
         <div class="comments">
           ${item.comments.map((comment) => `
             <div class="d-flex flex-column mb-1 py-1 border-bottom container">
