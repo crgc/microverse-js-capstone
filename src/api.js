@@ -22,7 +22,7 @@ const likesBaseURI = `${involvementAPIBaseURI}/likes`;
 const getLocalLikes = () => JSON.parse(localStorage.getItem('localLikes')) || [];
 
 const saveLocalLike = (pokemon) => {
-  let localLikes = getLocalLikes().concat(pokemon);
+  const localLikes = getLocalLikes().concat(pokemon);
   localStorage.setItem('localLikes', JSON.stringify(localLikes));
 };
 
@@ -38,10 +38,10 @@ const like = async (pokemon) => {
       'Content-type': 'application/json; charset=UTF-8',
     },
   })
-  .then((response) => response.text());
+    .then((response) => response.text());
 
   const created = (result === 'Created');
-  if(created) {
+  if (created) {
     saveLocalLike(pokemon);
   }
 
@@ -56,7 +56,7 @@ const fetchComments = async (pokemon) => fetch(`${commentsBaseURI}?item_id=${pok
     return [];
   });
 
-const addComment = async (pokemon, username, comment) => {
+const postComment = async (pokemon, username, comment) => {
   const result = await fetch(commentsBaseURI, {
     method: 'POST',
     body: JSON.stringify({
@@ -68,7 +68,7 @@ const addComment = async (pokemon, username, comment) => {
       'Content-type': 'application/json; charset=UTF-8',
     },
   })
-    .then((response) => response.text());
+  .then((response) => response.text());
 
   return (result === 'Created');
 };
@@ -111,7 +111,7 @@ const fetchItems = async () => {
         break;
       }
     }
-  })
+  });
 
   const likes = await fetchLikes();
   likes.forEach((likedItem) => {
@@ -132,5 +132,6 @@ const fetchItems = async () => {
 
 export {
   like,
-  fetchItems
+  postComment,
+  fetchItems,
 };

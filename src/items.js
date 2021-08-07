@@ -1,12 +1,10 @@
-import { like, fetchItems } from './api.js';
+import { like, postComment, fetchItems } from './api.js';
 import {
   getElementById, createDivWithClass, createDivWithId,
   createElement, createElementWithClass, createCommentButton, formatDate,
 } from './util.js';
 
 let items = null;
-
-const saveItems = (items) => localStorage.setItem('items', JSON.stringify(items));
 
 const getLikeClassName = (item) => (item.liked ? 'fas fa-heart red' : 'far fa-heart like');
 
@@ -19,7 +17,7 @@ const createHeartElement = (item) => {
       if (items[i].pokemon === pkmn) {
         if (!items[i].liked) {
           like(pkmn).then((liked) => {
-            if(liked) {
+            if (liked) {
               items[i].liked = true;
               items[i].likes += 1;
 
@@ -40,44 +38,57 @@ const createHeartElement = (item) => {
 
 const addComment = (event) => {
   event.preventDefault();
+
   const { parentElement } = event.target;
   const nameInput = parentElement.querySelector('input');
   const commentInput = parentElement.querySelector('textarea');
-  const name = nameInput.value;
+  const username = nameInput.value;
   const comment = commentInput.value;
   const id = event.target.id.split('add-comment-')[1];
 
+  if((username === null || username.length === 0) ||
+      (comment === null || comment.length === 0)) {
+    return;
+  }
+
+  const formatDate = (date) => date.toISOString().split('T')[0];
+
   for (const i in items) { /* eslint-disable-line */
-    if (items[i].pokemon === id) {
-      const newComment = {
-        name,
-        date: formatDate(new Date()),
-        comment,
-      };
-      items[i].comments = items[i].comments.concat(newComment);
+    const pokemon = items[i].pokemon;
 
-      const commentsDiv = getElementById(`comments-${id}`);
-      const commentDiv = createDivWithClass('d-flex flex-column mb-1 py-1 border-bottom container');
-
-      const h4Element = createElementWithClass('h4', 'font-medium-1');
-      h4Element.textContent = newComment.name;
-
-      const h5Element = createElementWithClass('h5', 'font-small-2');
-      h5Element.textContent = newComment.date;
-
-      const pElement = createElementWithClass('p', 'font-small-3');
-      pElement.textContent = newComment.comment;
-
-      commentDiv.appendChild(h4Element);
-      commentDiv.appendChild(h5Element);
-      commentDiv.appendChild(pElement);
-
-      commentsDiv.appendChild(commentDiv);
-
-      const commentsCounter = getElementById(`comments-counter-${id}`);
-      commentsCounter.textContent = `Comments (${items[i].comments.length})`;
-
-      saveItems(items);
+    if (pokemon === id) {
+      postComment(pokemon, username, comment)
+      .then((created) => {
+        if(created) {
+          const newComment = {
+            username,
+            comment,
+            creation_date: formatDate(new Date())
+          };
+          items[i].comments = items[i].comments.concat(newComment);
+    
+          const commentsDiv = getElementById(`comments-${id}`);
+          const commentDiv = createDivWithClass('d-flex flex-column mb-1 py-1 border-bottom container');
+    
+          const h4Element = createElementWithClass('h4', 'font-medium-1');
+          h4Element.textContent = newComment.username;
+    
+          const h5Element = createElementWithClass('h5', 'font-small-2');
+          h5Element.textContent = newComment.creation_date;
+    
+          const pElement = createElementWithClass('p', 'font-small-3');
+          pElement.textContent = newComment.comment;
+    
+          commentDiv.appendChild(h4Element);
+          commentDiv.appendChild(h5Element);
+          commentDiv.appendChild(pElement);
+    
+          commentsDiv.appendChild(commentDiv);
+    
+          const commentsCounter = getElementById(`comments-counter-${id}`);
+          commentsCounter.textContent = `Comments (${items[i].comments.length})`;
+        }
+      });
 
       break;
     }
