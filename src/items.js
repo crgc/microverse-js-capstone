@@ -122,7 +122,7 @@ const display = async () => {
     const pElement = createElement('p');
     pElement.id = `likes-${pkmn}`;
     pElement.textContent = `${item.likes} likes`;
-    
+
     const commentModal = document.createElement('div');
     commentModal.className = 'modal';
     commentModal.innerHTML = `           
