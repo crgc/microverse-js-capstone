@@ -76,7 +76,7 @@ const addComment = (event) => {
   const name = nameInput.value;
   const comment = commentInput.value;
   const id = event.target.parentElement.dataset.itemId;
-  items = getItems();
+  // items = getItems();
   items = items.map((item) => {
     if (item.id === id) {
       const newComment = {
@@ -122,6 +122,7 @@ const display = async () => {
     const pElement = createElement('p');
     pElement.id = `likes-${pkmn}`;
     pElement.textContent = `${item.likes} likes`;
+    
     const commentModal = document.createElement('div');
     commentModal.className = 'modal';
     commentModal.innerHTML = `           
