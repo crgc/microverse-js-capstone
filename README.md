@@ -53,6 +53,9 @@ npm test
 ## Live Demo
 [Mini Pokédex](https://crgc.github.io/microverse-js-capstone/)
 
+## Video Presentation
+[Loom link](https://www.loom.com/share/e73e19d426fe435ca289de30e635dead)
+
 ## Authors
 
 👤  **Carlos González**
