@@ -4,6 +4,65 @@ main {
   min-height: 100%;
 }
 
+a {
+  text-decoration: none !important;
+}
+
+a:hover,
+a:focus {
+  color: white !important;
+  cursor: pointer;
+}
+
+.type-icon {
+  display: inline-block;
+  width: 66px;
+  margin-bottom: 4px;
+  background: #dbdbdb;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: normal;
+  line-height: 1.5rem;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgb(0 0 0 / 70%);
+  text-transform: uppercase;
+  transition: opacity 0.4s;
+}
+
+.type-fire {
+  background-color: #f42;
+}
+
+.type-grass {
+  background-color: #7c5;
+}
+
+.type-water {
+  background-color: #39f;
+}
+
+.type-dragon {
+  background-color: #76e;
+}
+
+.type-flying {
+  background-color: #89f;
+}
+
+.type-dark {
+  background-color: #754;
+}
+
+.type-electric {
+  background-color: #fc3;
+}
+
+.ml-3 {
+  margin-left: 3rem !important;
+}
+
 .image-cont > img {
   width: 237.5px;
 }

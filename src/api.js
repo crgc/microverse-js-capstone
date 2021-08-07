@@ -1,20 +1,6 @@
 import _ from 'lodash'; /* eslint-disable-line */
 import pokedex from './pokedex.js';
 
-/* { "item_id": "Arcanine" } */
-/* Created */
-/* {
-    "item_id": "Arcanine",
-    "username": "Carlos",
-    "comment": "Evolves from Growlithe using a Firestone!"
-} */
-/* [
-    {
-        "creation_date": "2021-08-07",
-        "comment": "Evolves from Growlithe using a Firestone!",
-        "username": "Carlos"
-    }
-] */
 const involvementAPIBaseURI = 'https://us-central1-involvement-api.cloudfunctions.net/capstoneApi/apps/M3HgMCFCS5htQufJBVSC';
 const commentsBaseURI = `${involvementAPIBaseURI}/comments`;
 const likesBaseURI = `${involvementAPIBaseURI}/likes`;
@@ -81,6 +67,12 @@ const fetchPokemon = async () => {
   const result = (await Promise.all(fetchAll)).map((pkmn) => ({
     name: pkmn.name,
     image_url: pkmn.sprites.other['official-artwork'].front_default,
+    info: {
+      number: pkmn.id,
+      type: pkmn.types[0].type.name,
+      height: pkmn.height,
+      weight: pkmn.weight,
+    },
   }));
 
   return result;
@@ -96,6 +88,7 @@ const fetchItems = async () => {
 
     items = items.concat({
       pokemon: pkmnName,
+      info: pkmn.info,
       image_url: pkmn.image_url,
       comments: [],
       likes: 0,

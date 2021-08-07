@@ -2,6 +2,7 @@ import { like, postComment, fetchItems } from './api.js';
 import {
   getElementById, createDivWithClass, createDivWithId,
   createElement, createElementWithClass, createCommentButton,
+  formatHeight, formatWeight,
 } from './util.js';
 
 let items = null;
@@ -128,12 +129,31 @@ const displayItems = async () => {
     pElement.id = `likes-${pkmn}`;
     pElement.textContent = `${item.likes} likes`;
 
+    const pkmnInfo = item.info;
     const commentModal = createDivWithClass('modal');
     commentModal.innerHTML = `           
       <div class="modal-content">
         <span class="close">&times;</span>
         <img src="${item.image_url}" class="w-25 container border border-dark mb-3"></img>
-        <h3 class="text-center mb-3">${pkmn}</h3>
+        <h3 class="text-center mb-2">${pkmn}</h3>
+        <div class="pokemon-info d-flex flex-column justify-content-center align-items-center my-3">
+          <div class="d-flex flex-row w-25 justify-content-center">
+            <h5 class="font-small-2">National №:</h5>
+            <strong class="ml-3">${pkmnInfo.number}</strong>
+          </div>
+          <div class="d-flex flex-row w-25 justify-content-center">
+            <h5 class="font-small-2">Type:</h5>
+            <a class="type-icon type-${pkmnInfo.type} ml-3">${pkmnInfo.type}</a>
+          </div>
+          <div class="d-flex flex-row w-25 justify-content-center">
+            <h5 class="font-small-2">Height:</h5>
+            <div class="ml-3">${formatHeight(pkmnInfo.height)}</div>
+          </div>
+          <div class="d-flex flex-row w-25 justify-content-center">
+            <h5 class="font-small-2">Weight:</h5>
+            <div class="ml-3">${formatWeight(pkmnInfo.weight)}</div>
+          </div>
+        </div>
         <h3 id="comments-counter-${pkmn}" class="text-center mb-3 commentsection">Comments (${item.comments.length})</h3>
         <div id="comments-${pkmn}">
           ${item.comments.map((comment) => `
