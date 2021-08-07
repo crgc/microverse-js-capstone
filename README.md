@@ -2,7 +2,7 @@
 
 # Mini Pokédex
 
-> A Mini Pokédex app
+> A Mini Pokédex app which uses the Pokeapi API to retrieve and show information about Pokémon
 
 ![screenshot](./img/screenshot.png)
 
