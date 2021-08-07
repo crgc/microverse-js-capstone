@@ -31,6 +31,20 @@ const createCommentButton = () => {
   return commentButton;
 };
 
+const fixed = (number) => Number.parseFloat(number).toFixed(1);
+
+const formatHeight = (height) => {
+  const meters = height / 10;
+  return `${fixed(meters)} m`;
+};
+
+const formatWeight = (weight) => {
+  const kgs = weight / 10;
+  const lbs = kgs * 2.2;
+
+  return `${fixed(kgs)} kg (${fixed(lbs)} lbs)`;
+};
+
 export {
   getElementById,
   createElement,
@@ -39,4 +53,6 @@ export {
   createDivWithId,
   createCommentButton,
   setDocument,
+  formatHeight,
+  formatWeight,
 };
