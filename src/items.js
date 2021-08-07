@@ -1,5 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-import fetchPokemon from './api.js';
+import { like, fetchItems } from './api.js';
 import {
   getElementById, createDivWithClass, createDivWithId,
   createElement, createElementWithClass, createCommentButton, formatDate,
@@ -7,58 +6,29 @@ import {
 
 let items = null;
 
-const getItems = () => JSON.parse(localStorage.getItem('items'));
-
 const saveItems = (items) => localStorage.setItem('items', JSON.stringify(items));
 
-const loadItems = async () => {
-  items = getItems();
-
-  if (!items) {
-    const pkmnData = await fetchPokemon();
-    items = [];
-
-    pkmnData.forEach((pkmn) => {
-      let pkmnName = pkmn.name;
-      pkmnName = pkmnName.charAt(0).toUpperCase() + pkmnName.slice(1);
-
-      items = items.concat({
-        id: uuidv4(),
-        pokemon: pkmnName,
-        image_url: pkmn.image_url,
-        comments: [],
-        likes: 0,
-        liked: false,
-      });
-    });
-
-    saveItems(items);
-  }
-
-  return items;
-};
-
-const getLikeClassName = (item) => (item.liked ? 'fas fa-heart red' : 'far fa-heart');
+const getLikeClassName = (item) => (item.liked ? 'fas fa-heart red' : 'far fa-heart like');
 
 const createHeartElement = (item) => {
   const heartElement = createElementWithClass('i', getLikeClassName(item));
-  heartElement.addEventListener('click', () => {
+  heartElement.addEventListener('click', async () => {
     for (const i in items) { /* eslint-disable-line */
-      if (items[i].pokemon === item.pokemon) {
-        if (items[i].liked) {
-          items[i].likes -= 1;
-        } else {
-          items[i].likes += 1;
+      const pkmn = item.pokemon;
+
+      if (items[i].pokemon === pkmn) {
+        if (!items[i].liked) {
+          like(pkmn).then((liked) => {
+            if(liked) {
+              items[i].liked = true;
+              items[i].likes += 1;
+
+              const likesElement = getElementById(`likes-${pkmn}`);
+              likesElement.textContent = `${items[i].likes} likes`;
+              heartElement.className = 'fas fa-heart red';
+            }
+          });
         }
-
-        items[i].liked = !items[i].liked;
-
-        const likesElement = getElementById(`likes-${item.pokemon}`);
-        likesElement.textContent = `${items[i].likes} likes`;
-
-        heartElement.className = getLikeClassName(items[i]);
-
-        saveItems(items);
 
         break;
       }
@@ -118,7 +88,7 @@ const addComment = (event) => {
 };
 
 const displayItems = async () => {
-  items = items || await loadItems();
+  items = items || await fetchItems();
   const itemsContainerElement = getElementById('items-container');
 
   const itemsCounterElement = getElementById('items-counter');
@@ -157,14 +127,14 @@ const displayItems = async () => {
         <div id="comments-${pkmn}">
           ${item.comments.map((comment) => `
             <div class="d-flex flex-column mb-1 py-1 border-bottom container">
-              <h4 class="font-medium-1">${comment.name}<h4/>
-              <h5 class="font-small-2">${comment.date}</h5>
+              <h4 class="font-medium-1">${comment.username}<h4/>
+              <h5 class="font-small-2">${comment.creation_date}</h5>
               <p class="font-small-3">${comment.comment}</p>
             </div>`)}
         </div>
         <forms class="form-group w-50 container" id="comment-form">
           <h6 class="text-center mb-3">Add a comment</h6>
-          <input type="text" placeholder="Your name" class="form-control mb-3" id="name-field">
+          <input type="text" placeholder="Your name" class="form-control mb-3">
           <textarea placeholder="Your insights" class="form-control mb-3" id="insightfield"></textarea>
           <button id="add-comment-${pkmn}">Comment</button>
         </form>
@@ -211,7 +181,4 @@ const display = (_items_) => {
   displayItems();
 };
 
-export {
-  getItems,
-  display,
-};
+export default display;

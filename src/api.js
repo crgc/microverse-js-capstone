@@ -19,47 +19,56 @@ const involvementAPIBaseURI = 'https://us-central1-involvement-api.cloudfunction
 const commentsBaseURI = `${involvementAPIBaseURI}/comments`;
 const likesBaseURI = `${involvementAPIBaseURI}/likes`;
 
-const fetchLikes = async() => fetch(likesBaseURI).then((response) => response.json());
+const getLocalLikes = () => JSON.parse(localStorage.getItem('localLikes')) || [];
+
+const saveLocalLike = (pokemon) => {
+  let localLikes = getLocalLikes().concat(pokemon);
+  localStorage.setItem('localLikes', JSON.stringify(localLikes));
+};
+
+const fetchLikes = async () => fetch(likesBaseURI).then((response) => response.json());
 
 const like = async (pokemon) => {
   const result = await fetch(likesBaseURI, {
     method: 'POST',
     body: JSON.stringify({
-      item_id: pokemon
+      item_id: pokemon,
     }),
     headers: {
       'Content-type': 'application/json; charset=UTF-8',
     },
   })
-  .then((response) => response.json());
+  .then((response) => response.text());
 
-  return (result === 'Created');
+  const created = (result === 'Created');
+  if(created) {
+    saveLocalLike(pokemon);
+  }
+
+  return created;
 };
 
-const fetchComments = async(pokemon) => {
-  return fetch(`${commentsBaseURI}?item_id=${pokemon}`)
-        .then((response) => {
-          if(response.ok) {
-            return response.json();
-          } else {
-            return [];
-          }
-        });
-};
+const fetchComments = async (pokemon) => fetch(`${commentsBaseURI}?item_id=${pokemon}`)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return [];
+  });
 
 const addComment = async (pokemon, username, comment) => {
   const result = await fetch(commentsBaseURI, {
     method: 'POST',
     body: JSON.stringify({
       item_id: pokemon,
-      username: username,
-      comment: comment,
+      username,
+      comment,
     }),
     headers: {
       'Content-type': 'application/json; charset=UTF-8',
     },
   })
-  .then((response) => response.json());
+    .then((response) => response.text());
 
   return (result === 'Created');
 };
@@ -77,7 +86,7 @@ const fetchPokemon = async () => {
   return result;
 };
 
-const fetchItems = async() => {
+const fetchItems = async () => {
   let items = [];
 
   const pkmnData = await fetchPokemon();
@@ -94,21 +103,34 @@ const fetchItems = async() => {
     });
   });
 
+  const localLikes = getLocalLikes();
+  localLikes.forEach((pokemon) => {
+    for (const i in items) { /* eslint-disable-line */
+      if (items[i].pokemon === pokemon) {
+        items[i].liked = true;
+        break;
+      }
+    }
+  })
+
   const likes = await fetchLikes();
   likes.forEach((likedItem) => {
-    for(const i in items) {
-      if(items[i].pokemon === likedItem.item_id) {
+    for (const i in items) { /* eslint-disable-line */
+      if (items[i].pokemon === likedItem.item_id) {
         items[i].likes = likedItem.likes;
         break;
       }
     }
   });
 
-  for(const i in items) {
+  for (const i in items) { /* eslint-disable-line */
     items[i].comments = await fetchComments(items[i].pokemon);
   }
 
   return items;
 };
 
-export default fetchItems;
+export {
+  like,
+  fetchItems
+};
