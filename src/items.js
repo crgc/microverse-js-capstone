@@ -75,24 +75,46 @@ const addComment = (event) => {
   const commentInput = parentElement.querySelector('textarea');
   const name = nameInput.value;
   const comment = commentInput.value;
-  const id = event.target.parentElement.dataset.itemId;
-  // items = getItems();
-  items = items.map((item) => {
-    if (item.id === id) {
+  const id = event.target.id.split('add-comment-')[1];
+
+  for (const i in items) { /* eslint-disable-line */
+    if (items[i].pokemon === id) {
       const newComment = {
-        id: uuidv4(),
-        name,
-        date: new Date(Date.now()),
-        comment,
+        name: name,
+        date: formatDate(new Date()),
+        comment: comment
       };
-      item.comments = [newComment, ...item.comments];
+      items[i].comments = items[i].comments.concat(newComment);
+
+      const commentsDiv = getElementById(`comments-${id}`)
+      const commentDiv = createDivWithClass('d-flex flex-column mb-1 py-1 border-bottom container');
+
+      const h4Element = createElementWithClass('h4', 'font-medium-1');
+      h4Element.textContent = newComment.name;
+
+      const h5Element = createElementWithClass('h5', 'font-small-2');
+      h5Element.textContent = newComment.date;
+
+      const pElement = createElementWithClass('p', 'font-small-3');
+      pElement.textContent = newComment.comment;
+
+      commentDiv.appendChild(h4Element);
+      commentDiv.appendChild(h5Element);
+      commentDiv.appendChild(pElement);
+
+      commentsDiv.appendChild(commentDiv);
+
+      const commentsCounter = getElementById(`comments-counter-${id}`);
+      commentsCounter.textContent = `Comments (${items[i].comments.length})`;
+
+      saveItems(items);
+
+      break;
     }
-    return item;
-  });
+  }
+  
   nameInput.value = '';
   commentInput.value = '';
-
-  saveItems(items);
 };
 
 const displayItems = async () => {
@@ -131,12 +153,12 @@ const displayItems = async () => {
         <span class="close">&times;</span>
         <img src="${item.image_url}" class="w-25 container border border-dark mb-3"></img>
         <h3 class="text-center mb-3">${pkmn}</h3>
-        <h3 id="comments-${pkmn}" class="text-center mb-3 commentsection">Comments (${item.comments.length})</h3>
-        <div class="comments">
+        <h3 id="comments-counter-${pkmn}" class="text-center mb-3 commentsection">Comments (${item.comments.length})</h3>
+        <div id="comments-${pkmn}">
           ${item.comments.map((comment) => `
             <div class="d-flex flex-column mb-1 py-1 border-bottom container">
               <h4 class="font-medium-1">${comment.name}<h4/>
-              <h5 class="font-small-2">${formatDate(comment.date)}</h5>
+              <h5 class="font-small-2">${comment.date}</h5>
               <p class="font-small-3">${comment.comment}</p>
             </div>`)}
         </div>
@@ -144,14 +166,13 @@ const displayItems = async () => {
           <h6 class="text-center mb-3">Add a comment</h6>
           <input type="text" placeholder="Your name" class="form-control mb-3" id="name-field">
           <textarea placeholder="Your insights" class="form-control mb-3" id="insightfield"></textarea>
-          <button id="add-comment">Comment</button>
+          <button id="add-comment-${pkmn}">Comment</button>
         </form>
-      </div>
-    `;
-    columnDiv.appendChild(commentModal);
+      </div>`;
     commentModal.querySelector('#comment-form').dataset.itemId = item.id;
+    commentModal.querySelector(`#add-comment-${pkmn}`).addEventListener('click', addComment);  
 
-    commentModal.querySelector('#add-comment').addEventListener('click', addComment);
+    columnDiv.appendChild(commentModal);
 
     const commentButton = createCommentButton();
     commentButton.addEventListener('click', () => {
