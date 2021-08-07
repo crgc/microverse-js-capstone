@@ -80,13 +80,13 @@ const addComment = (event) => {
   for (const i in items) { /* eslint-disable-line */
     if (items[i].pokemon === id) {
       const newComment = {
-        name: name,
+        name,
         date: formatDate(new Date()),
-        comment: comment
+        comment,
       };
       items[i].comments = items[i].comments.concat(newComment);
 
-      const commentsDiv = getElementById(`comments-${id}`)
+      const commentsDiv = getElementById(`comments-${id}`);
       const commentDiv = createDivWithClass('d-flex flex-column mb-1 py-1 border-bottom container');
 
       const h4Element = createElementWithClass('h4', 'font-medium-1');
@@ -112,7 +112,7 @@ const addComment = (event) => {
       break;
     }
   }
-  
+
   nameInput.value = '';
   commentInput.value = '';
 };
@@ -170,7 +170,7 @@ const displayItems = async () => {
         </form>
       </div>`;
     commentModal.querySelector('#comment-form').dataset.itemId = item.id;
-    commentModal.querySelector(`#add-comment-${pkmn}`).addEventListener('click', addComment);  
+    commentModal.querySelector(`#add-comment-${pkmn}`).addEventListener('click', addComment);
 
     columnDiv.appendChild(commentModal);
 
