@@ -35,7 +35,7 @@ describe('Items counter', () => {
 
     const item = items[0];
     const commentsArrSize = item.comments.length;
-    const commentsCounter = getElementById(`comments-${item.pokemon}`);
+    const commentsCounter = getElementById(`comments-counter-${item.pokemon}`);
 
     const commentsCount = commentsCounter.textContent
       .substring('Comments ('.length)
