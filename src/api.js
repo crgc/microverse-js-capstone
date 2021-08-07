@@ -68,7 +68,7 @@ const postComment = async (pokemon, username, comment) => {
       'Content-type': 'application/json; charset=UTF-8',
     },
   })
-  .then((response) => response.text());
+    .then((response) => response.text());
 
   return (result === 'Created');
 };
@@ -124,7 +124,8 @@ const fetchItems = async () => {
   });
 
   for (const i in items) { /* eslint-disable-line */
-    items[i].comments = await fetchComments(items[i].pokemon);
+    const { pokemon } = items[i];
+    items[i].comments = await fetchComments(pokemon); /* eslint-disable-line no-await-in-loop */
   }
 
   return items;

@@ -1,7 +1,7 @@
 import { like, postComment, fetchItems } from './api.js';
 import {
   getElementById, createDivWithClass, createDivWithId,
-  createElement, createElementWithClass, createCommentButton, formatDate,
+  createElement, createElementWithClass, createCommentButton,
 } from './util.js';
 
 let items = null;
@@ -16,7 +16,7 @@ const createHeartElement = (item) => {
 
       if (items[i].pokemon === pkmn) {
         if (!items[i].liked) {
-          like(pkmn).then((liked) => {
+          like(pkmn).then((liked) => { /* eslint-disable-line no-loop-func */
             if (liked) {
               items[i].liked = true;
               items[i].likes += 1;
@@ -46,49 +46,49 @@ const addComment = (event) => {
   const comment = commentInput.value;
   const id = event.target.id.split('add-comment-')[1];
 
-  if((username === null || username.length === 0) ||
-      (comment === null || comment.length === 0)) {
+  if ((username === null || username.length === 0)
+      || (comment === null || comment.length === 0)) {
     return;
   }
 
   const formatDate = (date) => date.toISOString().split('T')[0];
 
   for (const i in items) { /* eslint-disable-line */
-    const pokemon = items[i].pokemon;
+    const { pokemon } = items[i];
 
     if (pokemon === id) {
       postComment(pokemon, username, comment)
-      .then((created) => {
-        if(created) {
-          const newComment = {
-            username,
-            comment,
-            creation_date: formatDate(new Date())
-          };
-          items[i].comments = items[i].comments.concat(newComment);
-    
-          const commentsDiv = getElementById(`comments-${id}`);
-          const commentDiv = createDivWithClass('d-flex flex-column mb-1 py-1 border-bottom container');
-    
-          const h4Element = createElementWithClass('h4', 'font-medium-1');
-          h4Element.textContent = newComment.username;
-    
-          const h5Element = createElementWithClass('h5', 'font-small-2');
-          h5Element.textContent = newComment.creation_date;
-    
-          const pElement = createElementWithClass('p', 'font-small-3');
-          pElement.textContent = newComment.comment;
-    
-          commentDiv.appendChild(h4Element);
-          commentDiv.appendChild(h5Element);
-          commentDiv.appendChild(pElement);
-    
-          commentsDiv.appendChild(commentDiv);
-    
-          const commentsCounter = getElementById(`comments-counter-${id}`);
-          commentsCounter.textContent = `Comments (${items[i].comments.length})`;
-        }
-      });
+        .then((created) => { /* eslint-disable-line no-loop-func */
+          if (created) {
+            const newComment = {
+              username,
+              comment,
+              creation_date: formatDate(new Date()),
+            };
+            items[i].comments = items[i].comments.concat(newComment);
+
+            const commentsDiv = getElementById(`comments-${id}`);
+            const commentDiv = createDivWithClass('d-flex flex-column mb-1 py-1 border-bottom container');
+
+            const h4Element = createElementWithClass('h4', 'font-medium-1');
+            h4Element.textContent = newComment.username;
+
+            const h5Element = createElementWithClass('h5', 'font-small-2');
+            h5Element.textContent = newComment.creation_date;
+
+            const pElement = createElementWithClass('p', 'font-small-3');
+            pElement.textContent = newComment.comment;
+
+            commentDiv.appendChild(h4Element);
+            commentDiv.appendChild(h5Element);
+            commentDiv.appendChild(pElement);
+
+            commentsDiv.appendChild(commentDiv);
+
+            const commentsCounter = getElementById(`comments-counter-${id}`);
+            commentsCounter.textContent = `Comments (${items[i].comments.length})`;
+          }
+        });
 
       break;
     }
