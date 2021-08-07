@@ -6,7 +6,7 @@ import { beforeEach } from '@jest/globals';
 import jsdom from 'jsdom';
 import iconv from 'iconv-lite';
 import encodings from 'iconv-lite/encodings'; /* eslint-disable-line */
-import { display } from '../items.js';
+import display from '../items.js';
 import { setDocument, getElementById } from '../util.js';
 
 iconv.encodings = encodings;

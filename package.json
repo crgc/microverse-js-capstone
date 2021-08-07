@@ -34,6 +34,7 @@
     "hint": "^6.1.4",
     "html-webpack-plugin": "^5.3.2",
     "jest": "^27.0.6",
+    "lodash": "^4.17.21",
     "style-loader": "^3.2.1",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^21.0.0",
@@ -47,7 +48,6 @@
     "@jest/globals": "^27.0.6",
     "bootstrap": "^5.0.2",
     "iconv-lite": "^0.6.3",
-    "jsdom": "^16.7.0",
-    "uuid": "^8.3.2"
+    "jsdom": "^16.7.0"
   }
 }

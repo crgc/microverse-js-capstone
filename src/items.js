@@ -1,64 +1,32 @@
-import { v4 as uuidv4 } from 'uuid';
-import fetchPokemon from './api.js';
+import { like, postComment, fetchItems } from './api.js';
 import {
   getElementById, createDivWithClass, createDivWithId,
-  createElement, createElementWithClass, createCommentButton, formatDate,
+  createElement, createElementWithClass, createCommentButton,
 } from './util.js';
 
 let items = null;
 
-const getItems = () => JSON.parse(localStorage.getItem('items'));
-
-const saveItems = (items) => localStorage.setItem('items', JSON.stringify(items));
-
-const loadItems = async () => {
-  items = getItems();
-
-  if (!items) {
-    const pkmnData = await fetchPokemon();
-    items = [];
-
-    pkmnData.forEach((pkmn) => {
-      let pkmnName = pkmn.name;
-      pkmnName = pkmnName.charAt(0).toUpperCase() + pkmnName.slice(1);
-
-      items = items.concat({
-        id: uuidv4(),
-        pokemon: pkmnName,
-        image_url: pkmn.image_url,
-        comments: [],
-        likes: 0,
-        liked: false,
-      });
-    });
-
-    saveItems(items);
-  }
-
-  return items;
-};
-
-const getLikeClassName = (item) => (item.liked ? 'fas fa-heart red' : 'far fa-heart');
+const getLikeClassName = (item) => (item.liked ? 'fas fa-heart red' : 'far fa-heart like');
 
 const createHeartElement = (item) => {
   const heartElement = createElementWithClass('i', getLikeClassName(item));
-  heartElement.addEventListener('click', () => {
+  heartElement.addEventListener('click', async () => {
     for (const i in items) { /* eslint-disable-line */
-      if (items[i].pokemon === item.pokemon) {
-        if (items[i].liked) {
-          items[i].likes -= 1;
-        } else {
-          items[i].likes += 1;
+      const pkmn = item.pokemon;
+
+      if (items[i].pokemon === pkmn) {
+        if (!items[i].liked) {
+          like(pkmn).then((liked) => { /* eslint-disable-line no-loop-func */
+            if (liked) {
+              items[i].liked = true;
+              items[i].likes += 1;
+
+              const likesElement = getElementById(`likes-${pkmn}`);
+              likesElement.textContent = `${items[i].likes} likes`;
+              heartElement.className = 'fas fa-heart red';
+            }
+          });
         }
-
-        items[i].liked = !items[i].liked;
-
-        const likesElement = getElementById(`likes-${item.pokemon}`);
-        likesElement.textContent = `${items[i].likes} likes`;
-
-        heartElement.className = getLikeClassName(items[i]);
-
-        saveItems(items);
 
         break;
       }
@@ -70,44 +38,57 @@ const createHeartElement = (item) => {
 
 const addComment = (event) => {
   event.preventDefault();
+
   const { parentElement } = event.target;
   const nameInput = parentElement.querySelector('input');
   const commentInput = parentElement.querySelector('textarea');
-  const name = nameInput.value;
+  const username = nameInput.value;
   const comment = commentInput.value;
   const id = event.target.id.split('add-comment-')[1];
 
+  if ((username === null || username.length === 0)
+      || (comment === null || comment.length === 0)) {
+    return;
+  }
+
+  const formatDate = (date) => date.toISOString().split('T')[0];
+
   for (const i in items) { /* eslint-disable-line */
-    if (items[i].pokemon === id) {
-      const newComment = {
-        name,
-        date: formatDate(new Date()),
-        comment,
-      };
-      items[i].comments = items[i].comments.concat(newComment);
+    const { pokemon } = items[i];
 
-      const commentsDiv = getElementById(`comments-${id}`);
-      const commentDiv = createDivWithClass('d-flex flex-column mb-1 py-1 border-bottom container');
+    if (pokemon === id) {
+      postComment(pokemon, username, comment)
+        .then((created) => { /* eslint-disable-line no-loop-func */
+          if (created) {
+            const newComment = {
+              username,
+              comment,
+              creation_date: formatDate(new Date()),
+            };
+            items[i].comments = items[i].comments.concat(newComment);
 
-      const h4Element = createElementWithClass('h4', 'font-medium-1');
-      h4Element.textContent = newComment.name;
+            const commentsDiv = getElementById(`comments-${id}`);
+            const commentDiv = createDivWithClass('d-flex flex-column mb-1 py-1 border-bottom container');
 
-      const h5Element = createElementWithClass('h5', 'font-small-2');
-      h5Element.textContent = newComment.date;
+            const h4Element = createElementWithClass('h4', 'font-medium-1');
+            h4Element.textContent = newComment.username;
 
-      const pElement = createElementWithClass('p', 'font-small-3');
-      pElement.textContent = newComment.comment;
+            const h5Element = createElementWithClass('h5', 'font-small-2');
+            h5Element.textContent = newComment.creation_date;
 
-      commentDiv.appendChild(h4Element);
-      commentDiv.appendChild(h5Element);
-      commentDiv.appendChild(pElement);
+            const pElement = createElementWithClass('p', 'font-small-3');
+            pElement.textContent = newComment.comment;
 
-      commentsDiv.appendChild(commentDiv);
+            commentDiv.appendChild(h4Element);
+            commentDiv.appendChild(h5Element);
+            commentDiv.appendChild(pElement);
 
-      const commentsCounter = getElementById(`comments-counter-${id}`);
-      commentsCounter.textContent = `Comments (${items[i].comments.length})`;
+            commentsDiv.appendChild(commentDiv);
 
-      saveItems(items);
+            const commentsCounter = getElementById(`comments-counter-${id}`);
+            commentsCounter.textContent = `Comments (${items[i].comments.length})`;
+          }
+        });
 
       break;
     }
@@ -118,7 +99,7 @@ const addComment = (event) => {
 };
 
 const displayItems = async () => {
-  items = items || await loadItems();
+  items = items || await fetchItems();
   const itemsContainerElement = getElementById('items-container');
 
   const itemsCounterElement = getElementById('items-counter');
@@ -157,14 +138,14 @@ const displayItems = async () => {
         <div id="comments-${pkmn}">
           ${item.comments.map((comment) => `
             <div class="d-flex flex-column mb-1 py-1 border-bottom container">
-              <h4 class="font-medium-1">${comment.name}<h4/>
-              <h5 class="font-small-2">${comment.date}</h5>
+              <h4 class="font-medium-1">${comment.username}<h4/>
+              <h5 class="font-small-2">${comment.creation_date}</h5>
               <p class="font-small-3">${comment.comment}</p>
             </div>`)}
         </div>
         <forms class="form-group w-50 container" id="comment-form">
           <h6 class="text-center mb-3">Add a comment</h6>
-          <input type="text" placeholder="Your name" class="form-control mb-3" id="name-field">
+          <input type="text" placeholder="Your name" class="form-control mb-3">
           <textarea placeholder="Your insights" class="form-control mb-3" id="insightfield"></textarea>
           <button id="add-comment-${pkmn}">Comment</button>
         </form>
@@ -211,7 +192,4 @@ const display = (_items_) => {
   displayItems();
 };
 
-export {
-  getItems,
-  display,
-};
+export default display;

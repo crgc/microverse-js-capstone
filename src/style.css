@@ -27,6 +27,11 @@ main {
   width: 60% !important;
 }
 
+.like:hover,
+.like:focus {
+  cursor: pointer;
+}
+
 .modal {
   display: none;
   position: fixed;

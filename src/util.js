@@ -31,21 +31,6 @@ const createCommentButton = () => {
   return commentButton;
 };
 
-const formatDate = (timestamp) => {
-  if (!timestamp) return '';
-
-  const date = new Date(timestamp);
-  const formatter = new Intl.DateTimeFormat('en-NG', {
-    weekday: 'short',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour12: true,
-  }).format(date);
-
-  return formatter;
-};
-
 export {
   getElementById,
   createElement,
@@ -53,6 +38,5 @@ export {
   createDivWithClass,
   createDivWithId,
   createCommentButton,
-  formatDate,
   setDocument,
 };
